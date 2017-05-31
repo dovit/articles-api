@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ludo
- * Date: 02/10/2016
- * Time: 14:10
- */
 
 namespace AppBundle\Controller\Api\v1;
 

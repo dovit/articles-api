@@ -145,4 +145,3 @@ class Article
         return $this->updated;
     }
 }
-
