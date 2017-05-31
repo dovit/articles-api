@@ -146,7 +146,6 @@ class ArticleController extends FOSRestController
             return $this->handleView($this->view(['id' => $article->getId()], 200));
         }
         return $this->handleView($this->view([], 400));
-
     }
 
     /**
