@@ -11,14 +11,11 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\ArticleType;
-use FOS\RestBundle\Controller\Annotations\Version;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ArticleController
  * @package AppBundle\Controller\Api\v1
- *
- * @Version("v1")
  */
 class ArticleController extends FOSRestController
 {
