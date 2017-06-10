@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\ArticleType;
 use FOS\RestBundle\Controller\Annotations\Version;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ArticleController
@@ -42,7 +43,7 @@ class ArticleController extends FOSRestController
             ->getManager()
             ->getRepository('AppBundle:Article')
             ->findAll();
-        return $this->handleView($this->view($repository, 200));
+        return $this->handleView($this->view($repository, Response::HTTP_OK));
     }
 
     /**
@@ -65,9 +66,9 @@ class ArticleController extends FOSRestController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getArticle(Article $article)
+    public function getArticleAction(Article $article)
     {
-        return $this->handleView($this->view($article, 200));
+        return $this->handleView($this->view($article, Response::HTTP_OK));
     }
 
     /**
@@ -99,9 +100,9 @@ class ArticleController extends FOSRestController
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($article);
             $manager->flush();
-            return $this->handleView($this->view(['id' => $article->getId()], 200));
+            return $this->handleView($this->view(['id' => $article->getId()], Response::HTTP_CREATED));
         }
-        return $this->handleView($this->view([], 400));
+        return $this->handleView($this->view([], Response::HTTP_BAD_REQUEST));
     }
 
     /**
@@ -143,9 +144,9 @@ class ArticleController extends FOSRestController
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($article);
             $manager->flush();
-            return $this->handleView($this->view(['id' => $article->getId()], 200));
+            return $this->handleView($this->view(['id' => $article->getId()], Response::HTTP_OK));
         }
-        return $this->handleView($this->view([], 400));
+        return $this->handleView($this->view([], Response::HTTP_BAD_REQUEST));
     }
 
     /**
@@ -179,6 +180,6 @@ class ArticleController extends FOSRestController
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($article);
         $manager->flush();
-        return $this->handleView($this->view([], 200));
+        return $this->handleView($this->view([], Response::HTTP_OK));
     }
 }
