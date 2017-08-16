@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\ArticleType;
 use Symfony\Component\HttpFoundation\Response;
+use Swagger\Annotations as SWG;
 
 /**
  * Class ArticleController
@@ -20,16 +21,15 @@ use Symfony\Component\HttpFoundation\Response;
 class ArticleController extends FOSRestController
 {
     /**
-     *
-     * @ApiDoc(
-     *   description="List articles",
-     *   views= { "default", "article" },
-     *   section="article",
+     * @SWG\Get(
+     *     description="Articles",
+     *     path="/articles",
+     *     @SWG\Response(response="200", description="List of article")
      * )
      *
      * @View()
      *
-     * @Route("/articles", name="aticles")
+     * @Route("/articles", name="articles")
      *
      * @Method({"GET"})
      *
