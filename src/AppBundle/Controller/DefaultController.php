@@ -9,7 +9,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Swagger\Annotations as SWG;
 
 /**
- * @SWG\Info(title="Articles api", version="0.1")
+ * @SWG\Swagger(
+ *     basePath="/app_dev.php"
+ * )
+ *
+ * @SWG\Info(
+ *     title="Articles api",
+ *     version="0.1",
+ * )
  */
 class DefaultController extends Controller
 {

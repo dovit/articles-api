@@ -6,13 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Hateoas\Configuration\Annotation as Hateoas;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Swagger\Annotations as SWG;
 
 /**
  * Article
  *
  * @ORM\Table(name="article")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
- *
  *
  * @Hateoas\Relation(
  *      "delete",
@@ -28,6 +28,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *          "article",
  *          parameters = { "article" = "expr(object.getId())" }
  *      )
+ * )
+ *
+ * @SWG\Definition(
+ *     definition="Article",
+ *     required={"title"},
+ *     type="object"
  * )
  */
 class Article
@@ -48,6 +54,9 @@ class Article
      * @Assert\NotNull()
      *
      * @ORM\Column(name="title", type="string", length=255)
+     *
+     * @SWG\Property(readOnly=false, example="Un fou rire par jour")
+     *
      */
     private $title;
 
@@ -58,6 +67,8 @@ class Article
      * @Assert\NotNull()
      *
      * @ORM\Column(name="body", type="text")
+     *
+     * @SWG\Property(readOnly=false, example="Un texte...")
      */
     private $body;
 
@@ -135,11 +146,17 @@ class Article
         return $this->body;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreated()
     {
         return $this->created;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getUpdated()
     {
         return $this->updated;

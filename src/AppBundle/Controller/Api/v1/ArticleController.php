@@ -24,7 +24,11 @@ class ArticleController extends FOSRestController
      * @SWG\Get(
      *     description="Articles",
      *     path="/articles",
-     *     @SWG\Response(response="200", description="List of article")
+     *     tags={"article"},
+     *     @SWG\Response(
+     *          response="200",
+     *          description="List of article"
+     *      )
      * )
      *
      * @View()
@@ -44,18 +48,33 @@ class ArticleController extends FOSRestController
     }
 
     /**
-     *
      * @Method({"GET"})
      *
-     * @ApiDoc(
-     *     description="Get an article",
-     *     views={"article", "default"},
-     *     section="article",
+     * @SWG\Get(
+     *   path="/articles/{article}",
+     *   summary="Get an article",
+     *   tags={"article"},
+     *   description="Get an article",
+     *   @SWG\Parameter(
+     *     name="article",
+     *     in="path",
+     *     required=true,
+     *     type="integer",
+     *     description="id of article"
+     *   ),
+     *   @SWG\Response(
+     *     response=200,
+     *     description="Article"
+     *   ),
+     *   @SWG\Response(
+     *     response=400,
+     *     description="Bad request"
+     *   )
      * )
      *
      * @View()
      *
-     * @Route("/article/{article}",
+     * @Route("/articles/{article}",
      *     name="article",
      *     requirements={"article": "\d+"},)
      *
@@ -69,53 +88,91 @@ class ArticleController extends FOSRestController
     }
 
     /**
+     * @Method({"POST"})
      *
-     * @Method({"PUT"})
-     *
-     * @ApiDoc(
-     *     description="Create an article",
-     *     views={"article", "default"},
-     *     section="article",
-     *     input={
-     *          "class"="AppBundle\Form\Type\ArticleType"
-     *     }
+     * @SWG\Post(
+     *   path="/articles",
+     *   summary="Create an article",
+     *   tags={"article"},
+     *   description="Create an article",
+     *   @SWG\Parameter(
+     *       name="body",
+     *       in="body",
+     *       description="Article object",
+     *       required=true,
+     *       @SWG\Schema(ref="#/definitions/Article")
+     *   ),
+     *   @SWG\Response(
+     *     response=201,
+     *     description="Article created"
+     *   ),
+     *   @SWG\Response(
+     *     response=400,
+     *     description="Bad request"
+     *   )
      * )
      *
      * @View()
      *
-     * @Route("/article", name="article_create")
+     * @Route("/articles", name="article_create")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createArticleAction(Request $request)
     {
         $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article, ['method' => 'PUT']);
+        $form = $this->createForm(ArticleType::class, $article,
+            [
+                'method' => 'POST',
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($article);
             $manager->flush();
-            return $this->handleView($this->view(['id' => $article->getId()], Response::HTTP_CREATED));
+            return $this->handleView($this->view([$article], Response::HTTP_CREATED));
         }
-        return $this->handleView($this->view([], Response::HTTP_BAD_REQUEST));
+
+        return $this->handleView($this->view($form->getErrors(), Response::HTTP_BAD_REQUEST));
     }
 
     /**
      *
      * @Method({"POST"})
      *
-     * @ApiDoc(
-     *     description="Update an article",
-     *     views={"article", "default"},
-     *     section="article",
-     *     input={
-     *          "class"="AppBundle\Form\Type\ArticleType"
-     *     }
+     * @SWG\Post(
+     *   path="/articles/{article}",
+     *   summary="Update an article",
+     *   tags={"article"},
+     *   description="Update an article",
+     *   @SWG\Parameter(
+     *     name="article",
+     *     in="path",
+     *     required=true,
+     *     type="integer",
+     *     description="id of article"
+     *   ),
+     *   @SWG\Parameter(
+     *       name="body",
+     *       in="body",
+     *       description="Article object",
+     *       required=true,
+     *       @SWG\Schema(ref="#/definitions/Article")
+     *   ),
+     *   @SWG\Response(
+     *     response=201,
+     *     description="Article created"
+     *   ),
+     *   @SWG\Response(
+     *     response=400,
+     *     description="Bad request"
+     *   )
      * )
      *
-     * @Route("/article/{article}", name="article_update",
+     * @Route("/articles/{article}", name="article_update",
      *     requirements={"article": "\d+"})
      *
      * @ParamConverter("article", class="AppBundle:Article")
@@ -131,7 +188,7 @@ class ArticleController extends FOSRestController
     public function updateArticleAction(Request $request, Article $article)
     {
         if (!$article) {
-            throw new HttpException(404, 'Article not found');
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'Article not found');
         }
 
         $form = $this->createForm(ArticleType::class, $article, ['method' => 'POST']);
@@ -149,13 +206,29 @@ class ArticleController extends FOSRestController
     /**
      * @Method({"DELETE"})
      *
-     * @ApiDoc(
-     *     description="Delete an article",
-     *     views={"article", "default"},
-     *     section="article"
+     * @SWG\Delete(
+     *   path="/articles/{article}",
+     *   summary="Delete an article",
+     *   tags={"article"},
+     *   description="Delete an article",
+     *   @SWG\Parameter(
+     *     name="article",
+     *     in="path",
+     *     required=true,
+     *     type="integer",
+     *     description="id of article"
+     *   ),
+     *   @SWG\Response(
+     *     response=201,
+     *     description="Article deleted"
+     *   ),
+     *   @SWG\Response(
+     *     response=400,
+     *     description="Bad request"
+     *   )
      * )
      *
-     * @Route("/article/{article}",
+     * @Route("/articles/{article}",
      *     name="article_delete",
      *     requirements={"article": "\d+"})
      *
@@ -172,11 +245,11 @@ class ArticleController extends FOSRestController
     public function deleteArticleAction(Article $article)
     {
         if (!$article) {
-            throw new HttpException(404, 'Article not found');
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'Article not found');
         }
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($article);
         $manager->flush();
-        return $this->handleView($this->view([], Response::HTTP_OK));
+        return $this->handleView($this->view([], Response::HTTP_NO_CONTENT));
     }
 }

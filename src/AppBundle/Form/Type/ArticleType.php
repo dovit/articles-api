@@ -27,7 +27,12 @@ class ArticleType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Article',
-            'csrf_protection' => false,
+            'csrf_protection' => false
         ));
+    }
+
+    public function getBlockPrefix()
+    {
+        return '';
     }
 }
